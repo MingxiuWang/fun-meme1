@@ -6,7 +6,10 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db/client";
 import { bathrooms, votes } from "@/lib/db/schema";
 
+const LANG = z.enum(["en", "zh"]).default("en");
+
 const submitBathroomSchema = z.object({
+  lang: LANG,
   name: z.string().trim().min(2).max(120),
   school: z.string().trim().min(2).max(120),
   building: z.string().trim().max(120).optional().or(z.literal("")),
@@ -17,6 +20,7 @@ const submitBathroomSchema = z.object({
 });
 
 const voteSchema = z.object({
+  lang: LANG,
   bathroomId: z.string().min(1),
   score: z.coerce.number().int().min(1).max(10),
   review: z.string().trim().max(500).optional().or(z.literal("")),
@@ -49,8 +53,8 @@ export async function submitBathroom(formData: FormData): Promise<ActionResult> 
     review: d.review || null,
   });
 
-  revalidatePath("/");
-  redirect(`/b/${inserted.id}`);
+  revalidatePath("/[lang]", "layout");
+  redirect(`/${d.lang}/b/${inserted.id}`);
 }
 
 export async function voteOnBathroom(formData: FormData): Promise<ActionResult> {
@@ -67,7 +71,7 @@ export async function voteOnBathroom(formData: FormData): Promise<ActionResult> 
     review: d.review || null,
   });
 
-  revalidatePath("/");
-  revalidatePath(`/b/${d.bathroomId}`);
+  revalidatePath(`/${d.lang}`);
+  revalidatePath(`/${d.lang}/b/${d.bathroomId}`);
   return { ok: true };
 }

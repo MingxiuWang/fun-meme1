@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBathroomById, getReviewsForBathroom } from "@/lib/db/queries";
-import { scoreToTier, TIER_META } from "@/lib/tiers";
+import { scoreToTier, TIER_STYLE } from "@/lib/tiers";
 import { VoteForm } from "@/components/vote-form";
+import { getDictionary, hasLocale, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -10,33 +11,39 @@ export const dynamic = "force-dynamic";
 export default async function BathroomPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ lang: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { lang, id } = await params;
+  if (!hasLocale(lang)) notFound();
+  const dict = await getDictionary(lang as Locale);
+
   const b = await getBathroomById(id);
   if (!b) notFound();
 
   const reviews = await getReviewsForBathroom(id);
   const tier = scoreToTier(b.avgScore);
-  const meta = TIER_META[tier];
+  const style = TIER_STYLE[tier];
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/" className="text-sm text-zinc-400 hover:text-zinc-200">
-        ← back to tier list
+      <Link
+        href={`/${lang}`}
+        className="text-sm text-zinc-400 hover:text-zinc-200"
+      >
+        {dict.detail.back}
       </Link>
 
       <div className="mt-4 flex flex-col sm:flex-row gap-5 items-start">
         <div
           className={cn(
             "h-28 w-28 shrink-0 rounded-2xl flex flex-col items-center justify-center font-black",
-            meta.bg,
-            meta.text,
+            style.bg,
+            style.text,
           )}
         >
-          <span className="text-6xl leading-none">{meta.label}</span>
+          <span className="text-6xl leading-none">{tier}</span>
           <span className="mt-1 text-[10px] uppercase tracking-wider opacity-70">
-            tier
+            {dict.detail.tierBadge}
           </span>
         </div>
         <div className="flex-1">
@@ -56,29 +63,35 @@ export default async function BathroomPage({
               {b.avgScore !== null ? b.avgScore.toFixed(2) : "—"}/10
             </span>
             <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1">
-              {b.voteCount} vote{b.voteCount === 1 ? "" : "s"}
+              {dict.home.voteCount(b.voteCount)}
             </span>
             <span className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1 italic text-zinc-400">
-              {meta.tagline}
+              {dict.tiers[tier]}
             </span>
           </div>
         </div>
       </div>
 
       <section className="mt-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6">
-        <h2 className="text-xl font-bold mb-4">Cast your vote</h2>
-        <VoteForm bathroomId={b.id} />
+        <h2 className="text-xl font-bold mb-4">{dict.detail.voteHeading}</h2>
+        <VoteForm
+          bathroomId={b.id}
+          lang={lang}
+          dict={{ detail: dict.detail, scoreFlair: dict.scoreFlair }}
+        />
       </section>
 
       <section className="mt-10">
         <h2 className="text-xl font-bold mb-4">
-          Reviews{" "}
+          {dict.detail.reviewsHeading}{" "}
           <span className="text-sm text-zinc-500 font-normal">
             ({reviews.length})
           </span>
         </h2>
         {reviews.length === 0 ? (
-          <div className="text-sm text-zinc-500 italic">No reviews yet.</div>
+          <div className="text-sm text-zinc-500 italic">
+            {dict.detail.noReviews}
+          </div>
         ) : (
           <ul className="space-y-3">
             {reviews.map((r) => (
@@ -91,7 +104,9 @@ export default async function BathroomPage({
                     {r.score}/10
                   </span>
                   <span className="text-xs text-zinc-500">
-                    {new Date(r.createdAt).toLocaleDateString()}
+                    {new Date(r.createdAt).toLocaleDateString(
+                      lang === "zh" ? "zh-CN" : "en-US",
+                    )}
                   </span>
                 </div>
                 {r.review && (

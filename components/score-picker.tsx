@@ -3,26 +3,13 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const FLAIR: Record<number, string> = {
-  1: "war crime",
-  2: "biohazard",
-  3: "rough",
-  4: "questionable",
-  5: "mid",
-  6: "fine, i guess",
-  7: "solid",
-  8: "great",
-  9: "elite",
-  10: "porcelain throne",
-};
-
-export function ScorePicker({
-  name = "score",
-  defaultValue = 7,
-}: {
+type Props = {
   name?: string;
   defaultValue?: number;
-}) {
+  flair: Record<number, string>;
+};
+
+export function ScorePicker({ name = "score", defaultValue = 7, flair }: Props) {
   const [value, setValue] = useState(defaultValue);
 
   return (
@@ -42,7 +29,7 @@ export function ScorePicker({
                   ? "bg-amber-400 text-zinc-950 border-amber-300 scale-110"
                   : "bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-zinc-500",
               )}
-              aria-label={`Score ${n}: ${FLAIR[n]}`}
+              aria-label={`${n}: ${flair[n]}`}
             >
               {n}
             </button>
@@ -50,8 +37,8 @@ export function ScorePicker({
         })}
       </div>
       <div className="mt-2 text-sm text-zinc-400">
-        <span className="font-mono text-amber-400">{value}/10</span> ·{" "}
-        <span className="italic">{FLAIR[value]}</span>
+        <span className="font-mono text-amber-400">{value}/10</span>{" "}
+        · <span className="italic">{flair[value]}</span>
       </div>
     </div>
   );
