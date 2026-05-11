@@ -30,9 +30,9 @@ export async function generateMetadata({
   if (!hasLocale(lang)) return {};
   if (lang === "zh") {
     return {
-      title: "屎之王 — 大学厕所排行榜",
+      title: "大学必拉榜 — 抽象校园厕所图鉴",
       description:
-        "众包评分,覆盖每一间值得一去的校园厕所。1–10 打分,平均分决定等级。免登录。",
+        "全民众包,记录每一间值得蹲(或值得逃离)的大学厕所。1–10 打分,均分定生死。免登录。",
     };
   }
   return {

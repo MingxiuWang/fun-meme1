@@ -9,12 +9,15 @@ export type BathroomWithStats = {
   building: string | null;
   floor: string | null;
   description: string | null;
+  language: string;
   createdAt: Date;
   voteCount: number;
   avgScore: number | null;
 };
 
-export async function getAllBathroomsWithStats(): Promise<BathroomWithStats[]> {
+export async function getAllBathroomsWithStats(
+  preferredLanguage?: string,
+): Promise<BathroomWithStats[]> {
   const rows = await db
     .select({
       id: bathrooms.id,
@@ -23,6 +26,7 @@ export async function getAllBathroomsWithStats(): Promise<BathroomWithStats[]> {
       building: bathrooms.building,
       floor: bathrooms.floor,
       description: bathrooms.description,
+      language: bathrooms.language,
       createdAt: bathrooms.createdAt,
       voteCount: sql<number>`coalesce(count(${votes.id}), 0)::int`,
       avgScore: sql<number | null>`avg(${votes.score})::float`,
@@ -30,7 +34,11 @@ export async function getAllBathroomsWithStats(): Promise<BathroomWithStats[]> {
     .from(bathrooms)
     .leftJoin(votes, eq(votes.bathroomId, bathrooms.id))
     .groupBy(bathrooms.id)
-    .orderBy(desc(sql`avg(${votes.score})`));
+    .orderBy(
+      preferredLanguage
+        ? sql`(${bathrooms.language} = ${preferredLanguage}) desc, avg(${votes.score}) desc nulls last`
+        : desc(sql`avg(${votes.score})`),
+    );
 
   return rows;
 }
@@ -44,6 +52,7 @@ export async function getBathroomById(id: string) {
       building: bathrooms.building,
       floor: bathrooms.floor,
       description: bathrooms.description,
+      language: bathrooms.language,
       createdAt: bathrooms.createdAt,
       voteCount: sql<number>`coalesce(count(${votes.id}), 0)::int`,
       avgScore: sql<number | null>`avg(${votes.score})::float`,

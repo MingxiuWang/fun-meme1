@@ -16,7 +16,7 @@ export default async function Home({
   if (!hasLocale(lang)) notFound();
   const dict = await getDictionary(lang as Locale);
 
-  const all = await getAllBathroomsWithStats();
+  const all = await getAllBathroomsWithStats(lang);
 
   const grouped: Record<Tier, typeof all> = {
     S: [], A: [], B: [], C: [], D: [], F: [],

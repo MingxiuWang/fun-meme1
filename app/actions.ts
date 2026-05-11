@@ -44,6 +44,7 @@ export async function submitBathroom(formData: FormData): Promise<ActionResult> 
       building: d.building || null,
       floor: d.floor || null,
       description: d.description || null,
+      language: d.lang,
     })
     .returning({ id: bathrooms.id });
 

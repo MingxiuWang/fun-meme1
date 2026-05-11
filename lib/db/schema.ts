@@ -10,9 +10,13 @@ export const bathrooms = pgTable(
     building: text("building"),
     floor: text("floor"),
     description: text("description"),
+    language: text("language").notNull().default("en"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (t) => [index("bathrooms_school_idx").on(t.school)],
+  (t) => [
+    index("bathrooms_school_idx").on(t.school),
+    index("bathrooms_language_idx").on(t.language),
+  ],
 );
 
 export const votes = pgTable(
