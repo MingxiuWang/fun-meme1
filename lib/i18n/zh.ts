@@ -26,6 +26,12 @@ const zh: Dictionary = {
     rowEmpty: "空缺 —— 等你提名",
   },
 
+  countdown: {
+    headline: "投票第一名和最后一名的厕所我将亲自探访",
+    daysLeftTemplate: "还剩 {n} 天截止投票",
+    ended: "投票已结束,朝圣启程中。",
+  },
+
   tiers: {
     S: "封神之坑 —— 蹲此悟道",
     A: "下次还来,绝不嘴硬",
@@ -62,6 +68,10 @@ const zh: Dictionary = {
     floorPlaceholder: "例如 三楼西厕",
     descLabel: "氛围 / 描述",
     descPlaceholder: "描述一下气氛。能多抽象就多抽象。",
+    coverImageLabel: "封面图",
+    coverImageHint: "榜单卡片主视觉。JPG/PNG/WEBP,单张不超过 8MB。",
+    contentImagesLabel: "内容图(最多 8 张)",
+    contentImagesHint: "实拍图,放在详情页图廊。要抽象,要锐评。",
     ratingLabel: "你的评分 *",
     reviewLabel: "锐评(可选)",
     reviewPlaceholder: '"蹲下是大学生,站起是哲学家。" 告诉我们你看到了啥。',
@@ -74,13 +84,17 @@ const zh: Dictionary = {
     tierBadge: "评级",
     voteHeading: "投出你神圣的一票",
     reviewsHeading: "锐评",
-    noReviews: "暂无锐评。",
+    noReviews: "暂无文字锐评。",
     yourRating: "你的评分",
     leaveReview: "留下锐评(可选)",
     reviewPlaceholder: "蹲完心情如何?",
     vote: "投票",
     voting: "投票中…",
     voteRecorded: "投票已记,冲水已计。",
+    alreadyVoted: "这一坑你已经投过了。",
+    galleryEmpty: "暂无实拍。",
+    likeAction: "👍 顶",
+    unlikeAction: "👍 已顶",
   },
 
   footer: {

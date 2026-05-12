@@ -11,13 +11,15 @@ import type { Dictionary } from "@/lib/i18n/types";
 type Props = {
   bathroomId: string;
   lang: string;
+  alreadyVoted: boolean;
   dict: Pick<Dictionary, "detail" | "scoreFlair">;
 };
 
-export function VoteForm({ bathroomId, lang, dict }: Props) {
+export function VoteForm({ bathroomId, lang, alreadyVoted, dict }: Props) {
   const [pending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
   const [key, setKey] = useState(0);
+  const [voted, setVoted] = useState(alreadyVoted);
 
   async function action(formData: FormData) {
     startTransition(async () => {
@@ -26,10 +28,22 @@ export function VoteForm({ bathroomId, lang, dict }: Props) {
         toast.success(dict.detail.voteRecorded);
         formRef.current?.reset();
         setKey((k) => k + 1);
+        setVoted(true);
+      } else if (result.error === "ALREADY_VOTED") {
+        setVoted(true);
+        toast.error(dict.detail.alreadyVoted);
       } else {
         toast.error(result.error);
       }
     });
+  }
+
+  if (voted) {
+    return (
+      <div className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-sm text-amber-200">
+        ✓ {dict.detail.alreadyVoted}
+      </div>
+    );
   }
 
   return (

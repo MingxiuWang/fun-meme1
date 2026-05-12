@@ -25,6 +25,12 @@ export type Dictionary = {
     rowEmpty: string;
   };
 
+  countdown: {
+    headline: string;
+    daysLeftTemplate: string;
+    ended: string;
+  };
+
   tiers: Record<Tier, string>;
 
   scoreFlair: Record<number, string>;
@@ -43,6 +49,10 @@ export type Dictionary = {
     floorPlaceholder: string;
     descLabel: string;
     descPlaceholder: string;
+    coverImageLabel: string;
+    coverImageHint: string;
+    contentImagesLabel: string;
+    contentImagesHint: string;
     ratingLabel: string;
     reviewLabel: string;
     reviewPlaceholder: string;
@@ -62,6 +72,10 @@ export type Dictionary = {
     vote: string;
     voting: string;
     voteRecorded: string;
+    alreadyVoted: string;
+    galleryEmpty: string;
+    likeAction: string;
+    unlikeAction: string;
   };
 
   footer: {

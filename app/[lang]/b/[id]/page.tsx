@@ -1,8 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBathroomById, getReviewsForBathroom } from "@/lib/db/queries";
+import {
+  getBathroomById,
+  getBathroomGallery,
+  getReviewsForBathroom,
+  hasViewerVoted,
+} from "@/lib/db/queries";
 import { scoreToTier, TIER_STYLE } from "@/lib/tiers";
 import { VoteForm } from "@/components/vote-form";
+import { ImageGallery } from "@/components/image-gallery";
+import { ReviewList } from "@/components/review-list";
 import { getDictionary, hasLocale, type Locale } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -20,9 +27,18 @@ export default async function BathroomPage({
   const b = await getBathroomById(id);
   if (!b) notFound();
 
-  const reviews = await getReviewsForBathroom(id);
+  const [gallery, reviews, alreadyVoted] = await Promise.all([
+    getBathroomGallery(id),
+    getReviewsForBathroom(id),
+    hasViewerVoted(id),
+  ]);
+
   const tier = scoreToTier(b.avgScore);
   const style = TIER_STYLE[tier];
+
+  const heroImages = b.coverImageUrl
+    ? [{ id: "cover", url: b.coverImageUrl }, ...gallery]
+    : gallery;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
@@ -72,11 +88,20 @@ export default async function BathroomPage({
         </div>
       </div>
 
+      {heroImages.length > 0 ? (
+        <ImageGallery images={heroImages} alt={b.name} />
+      ) : (
+        <div className="mt-6 flex aspect-[16/9] w-full items-center justify-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30 text-sm text-zinc-500 italic">
+          {dict.detail.galleryEmpty}
+        </div>
+      )}
+
       <section className="mt-10 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5 sm:p-6">
         <h2 className="text-xl font-bold mb-4">{dict.detail.voteHeading}</h2>
         <VoteForm
           bathroomId={b.id}
           lang={lang}
+          alreadyVoted={alreadyVoted}
           dict={{ detail: dict.detail, scoreFlair: dict.scoreFlair }}
         />
       </section>
@@ -93,30 +118,20 @@ export default async function BathroomPage({
             {dict.detail.noReviews}
           </div>
         ) : (
-          <ul className="space-y-3">
-            {reviews.map((r) => (
-              <li
-                key={r.id}
-                className="rounded-lg border border-zinc-800 bg-zinc-900/50 p-4"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-amber-400 font-bold">
-                    {r.score}/10
-                  </span>
-                  <span className="text-xs text-zinc-500">
-                    {new Date(r.createdAt).toLocaleDateString(
-                      lang === "zh" ? "zh-CN" : "en-US",
-                    )}
-                  </span>
-                </div>
-                {r.review && (
-                  <p className="mt-2 text-sm text-zinc-300 whitespace-pre-wrap">
-                    {r.review}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
+          <ReviewList
+            bathroomId={b.id}
+            lang={lang}
+            reviews={reviews.map((r) => ({
+              id: r.id,
+              score: r.score,
+              review: r.review,
+              likeCount: r.likeCount,
+              viewerLiked: r.viewerLiked,
+              createdAtISO: r.createdAt.toISOString(),
+            }))}
+            likeAction={dict.detail.likeAction}
+            unlikeAction={dict.detail.unlikeAction}
+          />
         )}
       </section>
     </div>

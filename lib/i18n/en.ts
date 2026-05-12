@@ -26,6 +26,13 @@ const en: Dictionary = {
     rowEmpty: "empty — nominate one",
   },
 
+  countdown: {
+    headline:
+      "I will personally visit the #1 and last-place bathrooms when voting closes.",
+    daysLeftTemplate: "{n} days left to vote",
+    ended: "Voting closed. Pilgrimage incoming.",
+  },
+
   tiers: {
     S: "porcelain throne — life-changing flush",
     A: "would poop here again",
@@ -62,6 +69,10 @@ const en: Dictionary = {
     floorPlaceholder: "e.g. 3rd floor, west wing",
     descLabel: "Vibe / description",
     descPlaceholder: "Describe the ambiance. Be honest.",
+    coverImageLabel: "Cover image",
+    coverImageHint: "Headline shot — shows on the tier card. JPG/PNG/WEBP up to 8MB.",
+    contentImagesLabel: "More photos",
+    contentImagesHint: "Up to 8 photos — gallery on the detail page.",
     ratingLabel: "Your rating *",
     reviewLabel: "Quick review (optional)",
     reviewPlaceholder: '"Soft lighting, hard truths." Tell us what you saw.',
@@ -74,13 +85,17 @@ const en: Dictionary = {
     tierBadge: "tier",
     voteHeading: "Cast your vote",
     reviewsHeading: "Reviews",
-    noReviews: "No reviews yet.",
+    noReviews: "No written reviews yet.",
     yourRating: "Your rating",
     leaveReview: "Leave a review (optional)",
     reviewPlaceholder: "What was the experience like?",
     vote: "Cast your vote",
     voting: "Voting...",
     voteRecorded: "Vote recorded. Flush counted.",
+    alreadyVoted: "You've already voted on this stall.",
+    galleryEmpty: "No photos yet.",
+    likeAction: "👍 Like",
+    unlikeAction: "👍 Liked",
   },
 
   footer: {

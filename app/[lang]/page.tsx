@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAllBathroomsWithStats } from "@/lib/db/queries";
 import { TIERS, scoreToTier, type Tier } from "@/lib/tiers";
 import { TierRow } from "@/components/tier-row";
+import { CountdownBanner } from "@/components/countdown-banner";
 import { getDictionary, hasLocale, type Locale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
@@ -50,6 +51,12 @@ export default async function Home({
           </Link>
         </div>
       </section>
+
+      <CountdownBanner
+        headline={dict.countdown.headline}
+        daysLeftTemplate={dict.countdown.daysLeftTemplate}
+        ended={dict.countdown.ended}
+      />
 
       {all.length === 0 ? (
         <EmptyState lang={lang} dict={dict.home} />
