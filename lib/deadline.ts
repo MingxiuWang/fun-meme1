@@ -1,4 +1,4 @@
-export const VOTE_START_MS = Date.UTC(2026, 4, 14, 16, 0, 0);
+export const VOTE_START_MS = Date.UTC(2026, 4, 13, 16, 0, 0);
 export const VOTE_DEADLINE_MS = Date.UTC(2026, 4, 29, 15, 59, 59);
 
 export type DeadlineSnapshot = {

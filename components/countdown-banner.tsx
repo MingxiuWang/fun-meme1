@@ -34,8 +34,8 @@ export function CountdownBanner({
 
   if (snap.ended) {
     return (
-      <div className="mb-10 rounded-3xl border-2 border-zinc-700 bg-zinc-900/70 px-6 py-10 text-center shadow-[0_0_60px_-20px_rgba(244,114,182,0.4)]">
-        <p className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-200">
+      <div className="mb-8 rounded-2xl border border-zinc-700 bg-zinc-900/70 px-4 py-6 text-center shadow-[0_0_40px_-20px_rgba(244,114,182,0.4)]">
+        <p className="text-base sm:text-lg font-black tracking-tight text-zinc-200">
           {ended}
         </p>
       </div>
@@ -46,33 +46,33 @@ export function CountdownBanner({
   const dayLine = daysLeftTemplate.replace("{n}", String(snap.days));
 
   return (
-    <div className="relative mb-10 overflow-hidden rounded-3xl border-2 border-amber-400/60 bg-gradient-to-br from-amber-500/25 via-orange-500/15 to-fuchsia-600/30 p-6 sm:p-8 shadow-[0_0_80px_-20px_rgba(251,191,36,0.7)]">
-      <div className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-amber-400/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-fuchsia-500/30 blur-3xl" />
+    <div className="relative mb-8 overflow-hidden rounded-2xl border border-amber-400/60 bg-gradient-to-br from-amber-500/25 via-orange-500/15 to-fuchsia-600/30 p-4 sm:p-5 shadow-[0_0_50px_-20px_rgba(251,191,36,0.6)]">
+      <div className="pointer-events-none absolute -top-16 -right-16 h-44 w-44 rounded-full bg-amber-400/25 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-16 -left-10 h-44 w-44 rounded-full bg-fuchsia-500/25 blur-3xl" />
 
       <div className="relative">
-        <p className="max-w-3xl text-xl sm:text-3xl md:text-4xl font-black leading-tight tracking-tight text-amber-100 drop-shadow-[0_0_18px_rgba(251,191,36,0.55)]">
-          <span className="mr-2 inline-block animate-bounce">🚽</span>
+        <p className="max-w-3xl text-sm sm:text-lg md:text-xl font-black leading-tight tracking-tight text-amber-100 drop-shadow-[0_0_14px_rgba(251,191,36,0.5)]">
+          <span className="mr-1.5 inline-block animate-bounce text-base sm:text-xl">🚽</span>
           {headline}
         </p>
 
-        <p className="mt-2 text-sm sm:text-base font-mono uppercase tracking-[0.25em] text-amber-300/80">
+        <p className="mt-1 text-[10px] sm:text-xs font-mono uppercase tracking-[0.22em] text-amber-300/80">
           {dayLine}
         </p>
 
-        <div className="mt-6 grid grid-cols-4 gap-2 sm:gap-4">
+        <div className="mt-3 grid grid-cols-4 gap-1.5 sm:gap-2.5">
           <TimeUnit value={snap.days} label={daysLabel} hero />
           <TimeUnit value={snap.hours} label={hoursLabel} />
           <TimeUnit value={snap.minutes} label={minutesLabel} />
           <TimeUnit value={snap.seconds} label={secondsLabel} pulse />
         </div>
 
-        <div className="mt-7">
-          <div className="mb-1.5 flex justify-between font-mono text-[10px] sm:text-xs uppercase tracking-[0.25em] text-amber-300/80">
+        <div className="mt-4">
+          <div className="mb-1 flex justify-between font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-amber-300/80">
             <span>{progressLabel}</span>
             <span className="tabular-nums">{pct}%</span>
           </div>
-          <div className="relative h-5 sm:h-7 w-full overflow-hidden rounded-full border-2 border-amber-400/50 bg-zinc-950 shadow-inner">
+          <div className="relative h-2.5 sm:h-3.5 w-full overflow-hidden rounded-full border border-amber-400/50 bg-zinc-950 shadow-inner">
             <div
               className="absolute inset-y-0 left-0 overflow-hidden bg-gradient-to-r from-amber-400 via-orange-400 to-fuchsia-500 transition-[width] duration-700 ease-out"
               style={{ width: `${pct}%` }}
@@ -109,8 +109,8 @@ function TimeUnit({
       <div
         className={
           hero
-            ? "w-full rounded-2xl border-2 border-amber-300/70 bg-zinc-950/85 px-2 py-2 sm:py-3 text-center font-mono font-black tabular-nums text-5xl sm:text-7xl md:text-8xl leading-none text-amber-300"
-            : "w-full rounded-xl border border-zinc-700/70 bg-zinc-950/70 px-2 py-2 sm:py-2.5 text-center font-mono font-bold tabular-nums text-2xl sm:text-4xl md:text-5xl leading-none text-zinc-100"
+            ? "w-full rounded-xl border border-amber-300/70 bg-zinc-950/85 px-1 py-1.5 sm:py-2 text-center font-mono font-black tabular-nums text-2xl sm:text-4xl md:text-5xl leading-none text-amber-300"
+            : "w-full rounded-lg border border-zinc-700/70 bg-zinc-950/70 px-1 py-1.5 text-center font-mono font-bold tabular-nums text-base sm:text-2xl md:text-3xl leading-none text-zinc-100"
         }
         style={
           hero
@@ -125,8 +125,8 @@ function TimeUnit({
       <span
         className={
           hero
-            ? "mt-2 text-[10px] sm:text-xs font-black uppercase tracking-[0.35em] text-amber-200"
-            : "mt-1.5 text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-zinc-400"
+            ? "mt-1 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.3em] text-amber-200"
+            : "mt-1 text-[7px] sm:text-[9px] font-bold uppercase tracking-[0.22em] text-zinc-400"
         }
       >
         {label}
