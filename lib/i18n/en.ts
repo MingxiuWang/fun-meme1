@@ -31,6 +31,11 @@ const en: Dictionary = {
       "I will personally visit the #1 and last-place bathrooms when voting closes.",
     daysLeftTemplate: "{n} days left to vote",
     ended: "Voting closed. Pilgrimage incoming.",
+    daysLabel: "DAYS",
+    hoursLabel: "HRS",
+    minutesLabel: "MIN",
+    secondsLabel: "SEC",
+    progressLabel: "progress",
   },
 
   tiers: {
@@ -72,7 +77,10 @@ const en: Dictionary = {
     coverImageLabel: "Cover image",
     coverImageHint: "Headline shot — shows on the tier card. JPG/PNG/WEBP up to 8MB.",
     contentImagesLabel: "More photos",
-    contentImagesHint: "Up to 8 photos — gallery on the detail page.",
+    contentImagesHint: "Add them one at a time. Shown in order on the detail page.",
+    addImageButton: "+ Add another",
+    removeImageButton: "Remove",
+    imageCountTemplate: "{n}/8 added",
     ratingLabel: "Your rating *",
     reviewLabel: "Quick review (optional)",
     reviewPlaceholder: '"Soft lighting, hard truths." Tell us what you saw.',

@@ -30,6 +30,11 @@ const zh: Dictionary = {
     headline: "投票第一名和最后一名的厕所我将亲自探访",
     daysLeftTemplate: "还剩 {n} 天截止投票",
     ended: "投票已结束,朝圣启程中。",
+    daysLabel: "天",
+    hoursLabel: "时",
+    minutesLabel: "分",
+    secondsLabel: "秒",
+    progressLabel: "进度",
   },
 
   tiers: {
@@ -71,7 +76,10 @@ const zh: Dictionary = {
     coverImageLabel: "封面图",
     coverImageHint: "榜单卡片主视觉。JPG/PNG/WEBP,单张不超过 8MB。",
     contentImagesLabel: "内容图(最多 8 张)",
-    contentImagesHint: "实拍图,放在详情页图廊。要抽象,要锐评。",
+    contentImagesHint: "一张一张加。详情页图廊会按你添加的顺序展示。",
+    addImageButton: "+ 再加一张",
+    removeImageButton: "移除",
+    imageCountTemplate: "已添加 {n}/8",
     ratingLabel: "你的评分 *",
     reviewLabel: "锐评(可选)",
     reviewPlaceholder: '"蹲下是大学生,站起是哲学家。" 告诉我们你看到了啥。',

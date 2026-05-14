@@ -56,6 +56,11 @@ export default async function Home({
         headline={dict.countdown.headline}
         daysLeftTemplate={dict.countdown.daysLeftTemplate}
         ended={dict.countdown.ended}
+        daysLabel={dict.countdown.daysLabel}
+        hoursLabel={dict.countdown.hoursLabel}
+        minutesLabel={dict.countdown.minutesLabel}
+        secondsLabel={dict.countdown.secondsLabel}
+        progressLabel={dict.countdown.progressLabel}
       />
 
       {all.length === 0 ? (

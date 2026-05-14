@@ -29,6 +29,11 @@ export type Dictionary = {
     headline: string;
     daysLeftTemplate: string;
     ended: string;
+    daysLabel: string;
+    hoursLabel: string;
+    minutesLabel: string;
+    secondsLabel: string;
+    progressLabel: string;
   };
 
   tiers: Record<Tier, string>;
@@ -53,6 +58,9 @@ export type Dictionary = {
     coverImageHint: string;
     contentImagesLabel: string;
     contentImagesHint: string;
+    addImageButton: string;
+    removeImageButton: string;
+    imageCountTemplate: string;
     ratingLabel: string;
     reviewLabel: string;
     reviewPlaceholder: string;
