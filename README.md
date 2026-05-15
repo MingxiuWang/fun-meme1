@@ -1,30 +1,35 @@
 # King of Shit 🚽
 
-A crowd-sourced tier list of university & school bathrooms. Submit, rate (1–10), and let the average decide who sits on the porcelain throne. No login.
+A crowd-sourced tier list of university & school bathrooms. Submit, upload photos, rate (1–10), and let the average decide who sits on the porcelain throne. One vote per stall per browser. No login.
 
-Stack: Next.js 16 (App Router) · Tailwind v4 · shadcn/ui · Drizzle ORM · Neon Postgres (Vercel Marketplace) · Server Actions.
+Live: <https://king-of-shit.vercel.app> (EN) · <https://king-of-shit.vercel.app/zh> (中)
+
+Stack: Next.js 16 (App Router) · React 19 · Tailwind v4 · shadcn/ui · Drizzle ORM · Neon Postgres · Vercel Blob · Server Actions.
 
 ## First-time setup
 
-You need a Neon database. The fastest path is via Vercel Marketplace (free tier).
+You need a Neon database and a Vercel Blob store. Both are free-tier on Vercel Marketplace.
 
 ```bash
-# 1. Sign in to Vercel (one time)
+# 1. Sign in & link this directory to a Vercel project
 vercel login
-
-# 2. Link this directory to a new (or existing) Vercel project
 vercel link
 
-# 3. Provision Neon Postgres via the marketplace
+# 2. Provision Neon Postgres
 vercel integration add neon
 
-# 4. Pull DATABASE_URL into .env.local
+# 3. Provision Vercel Blob (non-interactive form for CI / agent shells)
+vercel blob create-store --yes \
+  --environment production --environment preview --environment development
+
+# 4. Pull DATABASE_URL + BLOB_READ_WRITE_TOKEN into .env.local
 vercel env pull .env.local
 
-# 5. Push the schema to your new database
-pnpm db:push
+# 5. Push the schema (drizzle-kit, fresh DB) OR run migrate-2 (existing DB)
+pnpm db:push                       # fresh DB
+pnpm tsx scripts/migrate-2.ts      # adds cover/gallery/likes/unique-vote idempotently
 
-# 6. (Optional) Seed with some starter bathrooms
+# 6. (Optional) Seed with starter bathrooms
 pnpm db:seed
 
 # 7. Run it
@@ -37,13 +42,31 @@ Open <http://localhost:3000>.
 
 | Path | What |
 |---|---|
-| `app/page.tsx` | The tier list (S/A/B/C/D/F) |
-| `app/submit/page.tsx` | Submit a new bathroom |
-| `app/b/[id]/page.tsx` | Bathroom detail + vote form + reviews |
-| `app/actions.ts` | Server actions: submitBathroom, voteOnBathroom |
-| `lib/db/schema.ts` | Drizzle schema (`bathrooms`, `votes`) |
-| `lib/db/queries.ts` | Read queries with average-score aggregations |
+| `app/[lang]/page.tsx` | Tier list (S/A/B/C/D/F) + countdown banner |
+| `app/[lang]/submit/page.tsx` | Submit a new bathroom (cover + gallery first) |
+| `app/[lang]/b/[id]/page.tsx` | Bathroom detail: image gallery, vote form, reviews |
+| `app/actions.ts` | Server actions: `submitBathroom`, `voteOnBathroom`, `toggleReviewLike` |
+| `proxy.ts` | Locale redirect + sets the `voter_id` cookie |
+| `components/countdown-banner.tsx` | Live D/H/M/S countdown to the deadline |
+| `components/image-gallery.tsx` | Detail-page hero + thumbnail grid |
+| `components/submit-form.tsx` | Add gallery photos one at a time, with previews |
+| `components/review-list.tsx` | Reviews with optimistic like toggling |
+| `lib/blob.ts` | Vercel Blob upload wrapper (8MB cap, image MIME guard) |
+| `lib/voter.ts` | Cookie-based anonymous voter id |
+| `lib/deadline.ts` | Vote window (start, end, days/hours/min/sec snapshot) |
+| `lib/i18n/{en,zh,types,index}.ts` | Server-only locale dictionaries |
+| `lib/db/schema.ts` | Drizzle schema: `bathrooms`, `bathroom_images`, `votes`, `review_likes` |
+| `lib/db/queries.ts` | Reads with avg score, gallery, like-weighted review sort |
 | `lib/tiers.ts` | Tier thresholds + colors |
+| `scripts/migrate-2.ts` | Targeted ALTER for the gallery/like/unique-vote schema |
+| `scripts/wipe-bathrooms.ts` | One-shot DELETE FROM bathrooms (FKs cascade) |
+
+## How voting works
+
+- Every visitor gets a `voter_id` cookie set in `proxy.ts` (httpOnly, SameSite=lax, 1y).
+- Postgres `unique(bathroom_id, voter_fingerprint)` enforces **one vote per stall per browser**. Duplicate inserts hit error code `23505` and the action returns `ALREADY_VOTED`.
+- Reviews can be liked. Order is `count(distinct likes) + extract(epoch from created_at) / 86400` — one like ≈ one day of freshness.
+- The vote window lives in `lib/deadline.ts` (default: 2026-05-14 → 2026-05-29 23:59 Beijing).
 
 ## Scoring → tier
 
@@ -63,11 +86,14 @@ vercel deploy            # preview
 vercel deploy --prod     # production
 ```
 
-The Neon `DATABASE_URL` is automatically wired into your Vercel project from the integration.
+Both `DATABASE_URL` and `BLOB_READ_WRITE_TOKEN` are auto-wired into the Vercel project from their respective integrations. If a `git push` doesn't trigger an auto-deploy, fall back to `vercel deploy --prod`.
 
 ## Roadmap
 
-- [ ] Photos (Vercel Blob)
+- [x] Photos (Vercel Blob) — cover + gallery
+- [x] Anti-spam: one vote per stall per voter (cookie + unique constraint)
+- [x] Like-weighted review ordering
+- [x] Live countdown to vote deadline
 - [ ] Per-school leaderboards
-- [ ] Rate-limit / anti-spam (BotID + voter fingerprint)
+- [ ] BotID for bot mitigation on the vote action
 - [ ] Optional sign-in for editing your reviews
